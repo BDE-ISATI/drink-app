@@ -1,15 +1,21 @@
 "use client"
 
 import React,{useState,useEffect} from 'react';
-import { useNavigate } from "react-router-dom";
+import { useRouter } from 'next/navigation'
+ 
+ 
+import { IDetectedBarcode, Scanner , useDevices } from '@yudiel/react-qr-scanner';
 
-import { Scanner , useDevices } from '@yudiel/react-qr-scanner';
 
 export default function HomePage() {
-  const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
+  //const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
+  //const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
 
-  const navigate = useNavigate()
+  const router = useRouter()
+
+  function handleScan(detectedCodes:IDetectedBarcode[]) {
+    router.push(`/users?${detectedCodes.at(0)?.rawValue}`, { scroll: false })
+  }
 
   return (
     
@@ -20,9 +26,7 @@ export default function HomePage() {
                 'qr_code',
             ]}
 
-            onScan={(detectedCodes) => {
-              navigate(`/users?${detectedCodes.at(0)?.rawValue}`)
-            }}
+            onScan={handleScan}
 
             components={{
                 audio: false,
