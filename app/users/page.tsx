@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Form, useForm } from "react-hook-form";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import QRCode from "react-qr-code";
 
 type UserType = {
   ID:string,
@@ -90,6 +91,7 @@ export default function Home() {
             <TableCell>{user.softs}</TableCell>
             <TableCell>{user.bieres}</TableCell>
             <TableCell>{user.forts}</TableCell>
+            <TableCell><QRCode value={user.ID}/></TableCell>
           </TableRow>
         )}
         </TableBody>
