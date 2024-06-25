@@ -14,7 +14,7 @@ export default function HomePage() {
   const router = useRouter()
 
   function handleScan(detectedCodes:IDetectedBarcode[]) {
-    router.push(`/users?${detectedCodes.at(0)?.rawValue}`, { scroll: false })
+    router.push(`/users/${detectedCodes.at(0)?.rawValue}`, { scroll: false })
   }
 
   return (
