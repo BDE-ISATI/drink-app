@@ -21,6 +21,12 @@ import { Label } from "@/components/ui/label"
 import { Form, useForm } from "react-hook-form";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 
+type UserType = {
+  ID:string,
+  softs:number,
+  bieres:number,
+  forts:number
+}
 
 export default function Home() {
 
@@ -78,8 +84,8 @@ export default function Home() {
           </TableRow>
         </TableHeader>
         <TableBody>
-        {data.data.map((user) =>
-          <TableRow>
+        {data.data.map((user:UserType) =>
+          <TableRow key={user.ID}>
             <TableCell>{user.ID}</TableCell>
             <TableCell>{user.softs}</TableCell>
             <TableCell>{user.bieres}</TableCell>
