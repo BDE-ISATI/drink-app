@@ -1,7 +1,7 @@
 "use client"
 
 import React,{useState,useEffect} from 'react';
-
+import { useNavigate } from "react-router-dom";
 
 import { Scanner , useDevices } from '@yudiel/react-qr-scanner';
 
@@ -9,9 +9,38 @@ export default function HomePage() {
   const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
 
+  const navigate = useNavigate()
+
   return (
     
     <div>
+
+        <Scanner
+            formats={[
+                'qr_code',
+            ]}
+
+            onScan={(detectedCodes) => {
+              navigate(`/users?${detectedCodes.at(0)?.rawValue}`)
+            }}
+
+            components={{
+                audio: false,
+                onOff: false,
+                torch: false,
+                zoom: false,
+                finder: true,
+            }}
+            scanDelay={500}
+        />
+    </div>
+);
+};
+
+/*
+            constraints={{
+              deviceId: deviceId
+            }}
       <select onChange={(e) => setDeviceId(e.target.value)}>
             <option value={undefined}>Select a device</option>
             {devices.map((device, index) => (
@@ -19,26 +48,4 @@ export default function HomePage() {
                     {device.label}
                 </option>
             ))}
-        </select>
-        <Scanner
-            formats={[
-                'qr_code',
-            ]}
-            constraints={{
-                deviceId: deviceId
-            }}
-            onScan={(detectedCodes) => {
-                alert(detectedCodes);
-            }}
-            components={{
-                audio: true,
-                onOff: true,
-                torch: true,
-                zoom: true,
-                finder: true,
-            }}
-            scanDelay={2000}
-        />
-    </div>
-);
-};
+        </select>*/
