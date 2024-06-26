@@ -1,33 +1,20 @@
 "use client"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Add } from "@mui/icons-material";
+import { Box, Button, Fab, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
-
-import { Button } from "@/components/ui/button"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Form, useForm } from "react-hook-form";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import QRCode from "react-qr-code";
 
 type UserType = {
   ID:string,
+  name:string,
+  lastname:string,
   softs:number,
   bieres:number,
   forts:number
 }
+
+
 
 export default function Home() {
 
@@ -40,19 +27,6 @@ export default function Home() {
       setData(resp)
     })
   }, [])
-
-  const formSchema = z.object({
-    username: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
-  })
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-    },
-  })
   
   async function send(body:Object,method:string): Promise<Response> {      
 
@@ -68,66 +42,69 @@ export default function Home() {
     return req
 }
 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleSave = async() => {
+    if (name != "" && lastname != ""){
+      await send({name:name,lastname:lastname,softs:0,bieres:0,forts:0},"PUT")
+      handleClose();
+    }
+  };
+
+  let [name,setName] = useState<string>("")
+  let [lastname,setLastName] = useState<string>("")
+
   return (
     <div>
 
-    <Button onClick={
-      async() => { await send({softs:0,bieres:0,forts:0},"PUT")}
-    }>Ajouter un user</Button>
+    <Fab onClick={handleOpen} className="fixed left-6 bottom-20" color="primary" aria-label="add">
+      <Add />
+    </Fab>
+
+    <Modal open={open} onClose={handleClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description" className="grid place-items-center h-full">
+      <Box sx={{}} className="w-96 bg-slate-50 p-4 flex flex-col shadow border gap-2">
+        <h2 className="text-xl font-bold">Ajouter une personne</h2>
+        <TextField error={lastname==""} value={lastname} onChange={e => setLastName(e.target.value)} id="nom" label="Nom" variant="filled" />
+        <TextField error={name==""} value={name} onChange={e => setName(e.target.value)}  id="prénom" label="Prénom" variant="filled" />
+        <div className="flex w-full">
+          <Button  className="flex-1" onClick={handleSave}>Add</Button>
+          <Button className="flex-1" onClick={handleClose}>Cancel</Button>
+        </div>
+      </Box>
+    </Modal>
 
     <Table>
-        <TableHeader>
+        <TableHead>
           <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>Softs</TableHead>
-            <TableHead>Bières</TableHead>
-            <TableHead>Forts</TableHead>
+            <TableCell>ID</TableCell>
+            <TableCell>Nom</TableCell>
+            <TableCell>Prénom</TableCell>
+            <TableCell>Softs</TableCell>
+            <TableCell>Bières</TableCell>
+            <TableCell>Forts</TableCell>
           </TableRow>
-        </TableHeader>
+        </TableHead>
         <TableBody>
-        {data.data.map((user:UserType) =>
-          <TableRow key={user.ID}>
-            <TableCell>{user.ID}</TableCell>
-            <TableCell>{user.softs}</TableCell>
-            <TableCell>{user.bieres}</TableCell>
-            <TableCell>{user.forts}</TableCell>
-            <TableCell><QRCode value={user.ID}/></TableCell>
-          </TableRow>
-        )}
+          {data.data.map((user:UserType) =>
+            <TableRow key={user.ID}>
+              <TableCell>{user.ID}</TableCell>
+              <TableCell>{user.lastname}</TableCell>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.softs}</TableCell>
+              <TableCell>{user.bieres}</TableCell>
+              <TableCell>{user.forts}</TableCell>
+              <TableCell><QRCode value={user.ID}/></TableCell>
+            </TableRow>
+          )}
         </TableBody>
-
     </Table>
+
+
     </div>
   );
 }
-
-/*
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Ajouter un user</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]" onSubmit={(event) => {
-            alert("ok")
-            event.preventDefault();
-          }}>
-
-        <DialogHeader>
-          <DialogTitle>Ajouter un user</DialogTitle>
-          <DialogDescription></DialogDescription>
-        </DialogHeader>
-
-        
-
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">ID</Label>
-            <Input id="username" defaultValue={Date.now()} className="col-span-3"/>
-          </div>
-        </div>
-
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-    */

@@ -1,5 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
+import QRCode from "react-qr-code"
 
 type UserType = {
   ID:string,
@@ -27,6 +28,7 @@ export default function Page({ params }: { params: { slug: string } }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <QRCode value={data.ID}/>
       ID: {data.ID}
       Softs: {data.softs}
       Bieres: {data.bieres}
