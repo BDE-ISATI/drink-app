@@ -19,8 +19,7 @@ export default function HomePage() {
 
   return (
     
-    <div>
-
+    <div className="grid place-items-center">
         <Scanner
             formats={[
                 'qr_code',
