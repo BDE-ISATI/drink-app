@@ -1,8 +1,7 @@
 "use client"
-import { Add } from "@mui/icons-material";
-import { Box, Button, Fab, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
+import { Add, More, MoreVert } from "@mui/icons-material";
+import { Box, Button, Fab, Link, Menu, MenuItem, Modal, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-
 import QRCode from "react-qr-code";
 
 type UserType = {
@@ -19,7 +18,8 @@ type UserType = {
 export default function Home() {
 
   let [data,setData] = useState({data:[]})
-  
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
   useEffect(() =>{
     fetch("https://rnwlvwlnab.execute-api.eu-west-3.amazonaws.com/Prod/users").then((resp) => {
       return resp.json()
@@ -38,11 +38,12 @@ export default function Home() {
     let resp = await req.json()
 
     alert(resp.message)
-
+    location.reload();
     return req
 }
 
   const [open, setOpen] = useState(false);
+  const [menuopen, setMenuOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -58,6 +59,7 @@ export default function Home() {
 
   let [name,setName] = useState<string>("")
   let [lastname,setLastName] = useState<string>("")
+  let [selected,setSelected] = useState<string>("")
 
   return (
     <div>
@@ -65,6 +67,22 @@ export default function Home() {
     <Fab onClick={handleOpen} className="fixed left-6 bottom-20" color="primary" aria-label="add">
       <Add />
     </Fab>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <Modal open={open} onClose={handleClose} aria-labelledby="parent-modal-title" aria-describedby="parent-modal-description" className="grid place-items-center h-full">
       <Box sx={{}} className="w-96 bg-slate-50 p-4 flex flex-col shadow border gap-2">
@@ -98,13 +116,46 @@ export default function Home() {
               <TableCell>{user.softs}</TableCell>
               <TableCell>{user.bieres}</TableCell>
               <TableCell>{user.forts}</TableCell>
-              <TableCell><QRCode value={user.ID}/></TableCell>
+
+
+
+              <TableCell>
+              <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={e => {setAnchorEl(e.currentTarget);setSelected(user.ID);setMenuOpen(true);    }}
+    >
+        <MoreVert></MoreVert>
+    </Button>
+                  </TableCell>
+
+
+
+
+
             </TableRow>
           )}
         </TableBody>
     </Table>
-
+    <Menu
+        id="basic-menu"
+        open={menuopen}
+        onClose={() => setMenuOpen(false)}
+        anchorEl={anchorEl}
+        MenuListProps={{
+        'aria-labelledby': 'basic-button',
+        }}
+    >
+      <Link href={`/users/${selected}`}><MenuItem>Show Profile</MenuItem></Link>
+      <MenuItem onClick={() => {}}>Show QRCODE</MenuItem>
+      <MenuItem onClick={() => send({ID:selected},"DELETE")}>Delete</MenuItem>
+    </Menu>
 
     </div>
   );
+
+    //<TableCell><QRCode value={user.ID}/></TableCell>
+
 }
