@@ -1,43 +1,43 @@
 "use client"
 
-import React,{useState,useEffect} from 'react';
-import { useRouter } from 'next/navigation'
- 
- 
-import { IDetectedBarcode, Scanner , useDevices } from '@yudiel/react-qr-scanner';
+import React from 'react';
+import {useRouter} from 'next/navigation'
+
+
+import {IDetectedBarcode, Scanner} from '@yudiel/react-qr-scanner';
 
 
 export default function HomePage() {
-  //const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-  //const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
+    //const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
+    //const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
 
-  const router = useRouter()
+    const router = useRouter()
 
-  function handleScan(detectedCodes:IDetectedBarcode[]) {
-    router.push(`/users/${detectedCodes.at(0)?.rawValue}`, { scroll: false })
-  }
+    function handleScan(detectedCodes: IDetectedBarcode[]) {
+        router.push(`/users/${detectedCodes.at(0)?.rawValue}`, {scroll: false})
+    }
 
-  return (
-    
-    <div className="grid place-items-center">
-        <Scanner
-            formats={[
-                'qr_code',
-            ]}
+    return (
 
-            onScan={handleScan}
+        <div className="grid place-items-center">
+            <Scanner
+                formats={[
+                    'qr_code',
+                ]}
 
-            components={{
-                audio: false,
-                onOff: false,
-                torch: false,
-                zoom: false,
-                finder: true,
-            }}
-            scanDelay={500}
-        />
-    </div>
-);
+                onScan={handleScan}
+
+                components={{
+                    audio: false,
+                    onOff: false,
+                    torch: false,
+                    zoom: false,
+                    finder: true,
+                }}
+                scanDelay={500}
+            />
+        </div>
+    );
 };
 
 /*
