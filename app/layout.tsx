@@ -2,7 +2,7 @@
 import "./globals.css"
 import {useEffect, useState} from "react";
 import {BottomNavigation, BottomNavigationAction, Container, Paper} from "@mui/material";
-import {AccountCircle, QrCode} from "@mui/icons-material";
+import {AccountCircle, Event, QrCode} from "@mui/icons-material";
 
 export default function RootLayout({
                                        children,
@@ -29,7 +29,8 @@ export default function RootLayout({
                 value={value}
             >
                 <BottomNavigationAction value="/" href="/" label="QrCode" icon={<QrCode/>}/>
-                <BottomNavigationAction value="/users" href="users" label="Users" icon={<AccountCircle/>}/>
+                <BottomNavigationAction value="/users" href="/users" label="Users" icon={<AccountCircle/>}/>
+                <BottomNavigationAction value="/events" href="/events" label="Events" icon={<Event/>}/>
             </BottomNavigation>
         </Paper>
         </body>

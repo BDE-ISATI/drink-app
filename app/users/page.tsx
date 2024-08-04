@@ -23,23 +23,19 @@ import {send} from "@/app/globals";
 type UserType = {
     ID: string,
     name: string,
-    lastname: string,
-    softs: number,
-    bieres: number,
-    forts: number
+    lastname: string
 }
 
 
 export default function Home() {
 
-    let [data, setData] = useState<{ data: UserType[] }>({data: []})
+    let [data, setData] = useState<UserType[]>([])
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
     useEffect(() => {
-        fetch("https://rnwlvwlnab.execute-api.eu-west-3.amazonaws.com/Prod/users").then((resp) => {
-            return resp.json()
-        }).then((resp) => {
-            setData(resp)
+        fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/users").then(async (req) => {
+            let resp = await req.json()
+            setData(resp.data)
         })
     }, [])
 
@@ -53,23 +49,16 @@ export default function Home() {
     };
     const handleSave = async () => {
         if (name != "" && lastname != "") {
-            await send({name: name, lastname: lastname, softs: 0, bieres: 0, forts: 0}, "PUT")
+            await send("users",{name: name, lastname: lastname}, "PUT")
             handleClose();
         }
     };
 
-    const handleReset = async () => {
-        for (let item of data.data) {
-            await send({ID: item.ID, softs: 0, bieres: 0, forts: 0}, "PATCH", false)
-        }
-        location.reload();
-    };
-
     const handleDownload = () => {
 
-        let text = "ID,name,lastname,softs,bieres,forts\n"
-        for (let item of data.data) {
-            text += `${item.ID},${item.name},${item.lastname},${item.softs},${item.bieres},${item.forts}\n`;
+        let text = "ID,name,lastname\n"
+        for (let item of data) {
+            text += `${item.ID},${item.name},${item.lastname}\n`;
         }
 
         var element = document.createElement("a");
@@ -97,10 +86,6 @@ export default function Home() {
                     icon={<Add/>}
                 />
                 <SpeedDialAction
-                    onClick={handleReset}
-                    icon={<Clear/>}
-                />
-                <SpeedDialAction
                     onClick={handleDownload}
                     icon={<Download/>}
                 />
@@ -126,21 +111,14 @@ export default function Home() {
                         <TableCell>ID</TableCell>
                         <TableCell>Nom</TableCell>
                         <TableCell>Prénom</TableCell>
-                        <TableCell>Softs</TableCell>
-                        <TableCell>Bières</TableCell>
-                        <TableCell>Forts</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {data.data.map((user: UserType) =>
+                    {data.map((user: UserType) =>
                         <TableRow key={user.ID}>
                             <TableCell>{user.ID}</TableCell>
                             <TableCell>{user.lastname}</TableCell>
                             <TableCell>{user.name}</TableCell>
-                            <TableCell>{user.softs}</TableCell>
-                            <TableCell>{user.bieres}</TableCell>
-                            <TableCell>{user.forts}</TableCell>
-
 
                             <TableCell>
                                 <Button
@@ -173,9 +151,7 @@ export default function Home() {
                 }}
             >
                 <Link href={`/users/${selected}`}><MenuItem>Show Profile</MenuItem></Link>
-                <MenuItem onClick={() => {
-                }}>Show QRCODE</MenuItem>
-                <MenuItem onClick={() => send({ID: selected}, "DELETE")}>Delete</MenuItem>
+                <MenuItem onClick={() => send("users",{ID: selected}, "DELETE")}>Delete</MenuItem>
             </Menu>
 
         </div>
