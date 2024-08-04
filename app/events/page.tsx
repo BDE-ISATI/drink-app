@@ -24,6 +24,7 @@ type EventType = {
     ID: string,
     name: string,
     date: string,
+    [boisson:string]:string
 }
 
 
