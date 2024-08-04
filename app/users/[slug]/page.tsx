@@ -24,7 +24,8 @@ type DrinkType = {
 }
 
 export default function Page({params}: { params: { slug: string } }) {
-    let boissons = ["softs","bieres","forts"]
+    type DrinkKeys = 'softs' | 'bieres' | 'forts';
+    let boissons: DrinkKeys[] = ["softs","bieres","forts"]
     
     let [userData, setUserData] = useState<UserType>({ID: "", name: "", lastname: ""})
     let [drinksData, setDrinksData] = useState<{[eventID:string]:DrinkType}>({})
@@ -117,7 +118,7 @@ export default function Page({params}: { params: { slug: string } }) {
                     <h1 className="text-2xl text-center m-8">{e.name} du {e.date}</h1>
                     <Table>
                         <TableBody>
-                            {boissons.map((boisson:string) => 
+                            {boissons.map((boisson) => 
                                 <TableRow key={boisson}>
                                     <TableCell>{boisson}</TableCell>
                                     <TableCell>{drinksData[e.ID][boisson]||0}</TableCell>
@@ -128,8 +129,7 @@ export default function Page({params}: { params: { slug: string } }) {
                                             eventID:drinksData[e.ID].eventID,
                                         };
 
-                                        temp[boisson] = drinksData[e.ID][boisson] || 0
-                                        temp[boisson]++
+                                        temp[boisson] = (drinksData[e.ID][boisson] as number || 0) + 1
 
                                         send("drinks",temp, "PATCH")
                                     }}>Ajouter</Button></TableCell>
