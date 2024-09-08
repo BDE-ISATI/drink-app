@@ -1,6 +1,6 @@
 "use client"
 import {Box, Button, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField} from "@mui/material"
-import {useEffect, useState} from "react"
+import {Suspense, useEffect, useState} from "react"
 import QRCode from "react-qr-code"
 import {send} from "@/app/globals";
 import { useSearchParams } from "next/navigation";
@@ -24,7 +24,7 @@ type DrinkType = {
     forts?: number,
 }
 
-export default function Page() {
+let SuccessedComponent: React.FC  = () => {
 
     const [open, setOpen] = useState(true);
     let [name, setName] = useState<string>("")
@@ -32,15 +32,12 @@ export default function Page() {
 
     const searchParams = useSearchParams();
 
+
     let id = searchParams.get("id")
 
     if (id === null){
         window.location.pathname = "/users"
     }
-
-    const handleOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = () => {
         setOpen(false);
@@ -60,35 +57,35 @@ export default function Page() {
     let [drinksData, setDrinksData] = useState<{[eventID:string]:DrinkType}>({})
     let [eventsData, setEventsData] = useState<EventType[]>([])
     let [isLoaded, setIsLoaded] = useState<boolean>(false)
-
-    let fetchUser = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/users").then(async (req) => {
-        let resp = await req.json()
-        for (let val of resp.data) {
-            if (val.ID === searchParams.get("id")) {
-                return val
-            }
-        }
-    })
-
-    let fetchDrinks = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/drinks").then(async (req) => {
-        let resp = await req.json()
-        let temp:{[eventID:string]:DrinkType} = {}
-
-        for (let val of resp.data) {
-            if (val.userID === id) {
-                temp[val.eventID] = val
-            }
-        }
-
-        return temp
-    })
-
-    let fetchEvents = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/events").then(async (req) => {
-        let resp = await req.json()
-        return resp.data
-    })
-
     useEffect(() => {
+        let fetchUser = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/users").then(async (req) => {
+            let resp = await req.json()
+            for (let val of resp.data) {
+                if (val.ID === searchParams.get("id")) {
+                    return val
+                }
+            }
+        })
+
+        let fetchDrinks = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/drinks").then(async (req) => {
+            let resp = await req.json()
+            let temp:{[eventID:string]:DrinkType} = {}
+
+            for (let val of resp.data) {
+                if (val.userID === id) {
+                    temp[val.eventID] = val
+                }
+            }
+
+            return temp
+        })
+
+        let fetchEvents = fetch("https://g3q87iuiw0.execute-api.eu-west-3.amazonaws.com/Prod/events").then(async (req) => {
+            let resp = await req.json()
+            return resp.data
+        })
+
+
         Promise.all([fetchUser, fetchDrinks, fetchEvents]).then((values) => {
             let userDataTemp = values[0]
 
@@ -204,5 +201,8 @@ export default function Page() {
             </main>
         )
     }
-    return <main></main>;
+}
+
+export default function Page() {
+    return <Suspense><SuccessedComponent></SuccessedComponent></Suspense>
 }
