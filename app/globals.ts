@@ -8,7 +8,6 @@ export async function send(where :string,body: Object, method: string, alert_and
     let resp = await req.json()
 
     if (alert_and_reload) {
-        //alert(resp.message)
         location.reload();
     }
 

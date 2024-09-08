@@ -8,13 +8,10 @@ import {IDetectedBarcode, Scanner} from '@yudiel/react-qr-scanner';
 
 
 export default function HomePage() {
-    //const [deviceId, setDeviceId] = useState<string | undefined>(undefined);
-    //const [devices, setDevices] = useState<MediaDeviceInfo[]>(useDevices());
-
     const router = useRouter()
 
     function handleScan(detectedCodes: IDetectedBarcode[]) {
-        router.push(`/users/${detectedCodes.at(0)?.rawValue}`, {scroll: false})
+        router.push(`/user?id=${detectedCodes.at(0)?.rawValue}`, {scroll: false})
     }
 
     return (
