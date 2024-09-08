@@ -150,7 +150,7 @@ export default function Home() {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <Link href={`/users/${selected}`}><MenuItem>Show Profile</MenuItem></Link>
+                <Link href={`/user?id=${selected}`}><MenuItem>Show Profile</MenuItem></Link>
                 <MenuItem onClick={() => send("users",{ID: selected}, "DELETE")}>Delete</MenuItem>
             </Menu>
 
