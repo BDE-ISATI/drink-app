@@ -1,6 +1,6 @@
 "use client"
 import {Box, Button, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField} from "@mui/material"
-import {useEffect, useState} from "react"
+import {Suspense, useEffect, useState} from "react"
 import QRCode from "react-qr-code"
 import {send} from "@/app/globals";
 import { useSearchParams } from "next/navigation";
@@ -24,7 +24,7 @@ type DrinkType = {
     forts?: number,
 }
 
-export default function Page() {
+let PageComponent = () => {
 
     const [open, setOpen] = useState(true);
     let [name, setName] = useState<string>("")
@@ -205,4 +205,8 @@ export default function Page() {
         )
     }
     return <main></main>;
+}
+
+export default function Page() {
+    return <Suspense><PageComponent></PageComponent></Suspense>
 }
