@@ -23,7 +23,7 @@ type DrinkType = {
     forts?: number,
 }
 
-let SuccessedComponent: React.FC  = () => {
+let PageComponent = () => {
 
     const [open, setOpen] = useState(true);
     let [name, setName] = useState<string>("")
@@ -198,8 +198,9 @@ let SuccessedComponent: React.FC  = () => {
             </main>
         )
     }
+    return <main></main>;
 }
 
 export default function Page() {
-    return <Suspense><SuccessedComponent></SuccessedComponent></Suspense>
+    return <Suspense><PageComponent></PageComponent></Suspense>
 }
