@@ -93,7 +93,7 @@ export default function Home() {
                 <TableBody>
                     {data.map((event: EventType) =>
                         <TableRow key={event.ID}>
-                            <TableCell>{event.ID}</TableCell>
+                            <TableCell style={{whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "90px", overflow: "hidden"}}>{event.ID}</TableCell>
                             <TableCell>
                                 <TextField error={event.name == ""} value={event.name} onChange={e => changeData(event,e)} id="name" type="string" variant="outlined"/>
                             </TableCell>

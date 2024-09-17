@@ -111,12 +111,13 @@ export default function Home() {
                         <TableCell>ID</TableCell>
                         <TableCell>Nom</TableCell>
                         <TableCell>Prénom</TableCell>
+                        <TableCell>Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {data.map((user: UserType) =>
                         <TableRow key={user.ID}>
-                            <TableCell>{user.ID}</TableCell>
+                            <TableCell style={{whiteSpace: "nowrap", textOverflow: "ellipsis", maxWidth: "90px", overflow: "hidden"}}>{user.ID}</TableCell>
                             <TableCell>{user.lastname}</TableCell>
                             <TableCell>{user.name}</TableCell>
 

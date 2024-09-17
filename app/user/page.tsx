@@ -1,7 +1,6 @@
 "use client"
 import {Box, Button, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField} from "@mui/material"
 import {Suspense, useEffect, useState} from "react"
-import QRCode from "react-qr-code"
 import {send} from "@/app/globals";
 import { useSearchParams } from "next/navigation";
 
@@ -137,8 +136,6 @@ let SuccessedComponent: React.FC  = () => {
         
         return (
             <main >
-                <QRCode value={userData.ID}/>
-
                 <h1 className="text-2xl text-center m-8">Profil</h1>
 
                 <Table>
@@ -188,10 +185,10 @@ let SuccessedComponent: React.FC  = () => {
                                                 eventID:drinksData[e.ID].eventID,
                                             };
 
-                                            temp[boisson] = 0
+                                            temp[boisson] = (drinksData[e.ID][boisson] as number || 0) - 1
 
                                             send("drinks",temp, "PATCH")
-                                        }}>Reset</Button></TableCell>
+                                        }}>Diminuer</Button></TableCell>
                                     </TableRow>
                                 )}
                             </TableBody>
