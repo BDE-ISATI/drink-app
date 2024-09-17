@@ -3,8 +3,7 @@
 import React from 'react';
 import {useRouter} from 'next/navigation'
 
-
-import {IDetectedBarcode, Scanner} from '@yudiel/react-qr-scanner';
+import {IDetectedBarcode, IScannerStyles, Scanner} from '@yudiel/react-qr-scanner';
 
 
 export default function HomePage() {
@@ -14,10 +13,18 @@ export default function HomePage() {
         router.push(`/user?id=${detectedCodes.at(0)?.rawValue}`, {scroll: false})
     }
 
+    let style : IScannerStyles = {
+        container:{
+            "maxWidth":"500px"
+        }
+    }
+    
     return (
 
         <div className="grid place-items-center">
             <Scanner
+
+                styles={style}
                 formats={[
                     'qr_code',
                 ]}
